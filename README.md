@@ -6,18 +6,20 @@ Local clients keep environmental sequences, soil sequences, canopy images, and s
 
 ## Environment
 
-The code targets Python 3.10 and PyTorch 2.2 or newer. On this Mac the existing `py310` environment is sufficient. On Linux the same environment uses CUDA when `torch.cuda.is_available()` is true. Device selection is `auto`: CUDA, then Apple MPS, then CPU.
+Python 3.10 is required. PyTorch 2.2 or newer is installed from `requirements.txt`.
 
 ```bash
-conda activate py310
+conda create -n fmsd python=3.10
+conda activate fmsd
 pip install -r requirements.txt
 ```
+
+The default device setting is `auto`: CUDA is used when available, then Apple MPS, then CPU. Pass `--device` to select one explicitly.
 
 ## Layout
 
 ```text
 configs/          configuration
-dataset/          client records, not included in this repository
 src/data/         repair, scaling, and loaders
 src/models/       HMSE, NFA, SDPM, FMSD-Net
 src/losses/       multi-task objective
@@ -26,18 +28,6 @@ src/utils/
 tools/            entry points
 outputs/          checkpoints and metrics
 ```
-
-## Data
-
-Place one NumPy archive per client in `dataset/`:
-
-```text
-dataset/changping.npz
-dataset/baoding.npz
-dataset/weifang.npz
-```
-
-Each archive stores `environmental` with shape `(N, 336, 4)`, `soil` with shape `(N, 336, 3)`, `canopy` with shape `(N, 3, 224, 224)`, `structured` with shape `(N, 5)`, plus `price`, `yield`, `cost`, `net_return`, `season`, `cycle_id`, and `modality_observed`. The 2022 season is the training partition, 2023 is validation, and 2024 is the hold-out test. Windows that share a `cycle_id` share one compartment-season target. The loader repairs missing sensor steps, replaces outliers, and fits z-score statistics on the local 2022 partition. Raw facility records are not in this repository; they can be requested from the corresponding author as stated in the manuscript.
 
 ## Run
 

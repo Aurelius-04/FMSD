@@ -1,0 +1,98 @@
+seed: 42
+device: auto
+data_root: dataset
+output_dir: outputs
+num_workers: 0
+aggregation: nfa_fixed
+
+clients:
+  - changping
+  - baoding
+  - weifang
+
+seasons:
+  train: 2022
+  val: 2023
+  test: 2024
+
+model:
+  window_length: 336
+  environmental_channels: 4
+  soil_channels: 3
+  structured_channels: 5
+  image_size: 224
+  latent_dim: 128
+  temporal_channels: 64
+  temporal_kernels: [3, 5, 7]
+  temporal_depth: 2
+  temporal_layers: 2
+  temporal_heads: 4
+  visual_channels: [64, 128, 256]
+  visual_blocks: [2, 1, 2]
+  structured_hidden: 128
+  structured_dropout: 0.2
+  cross_modal_layers: 4
+  cross_modal_heads: 4
+  decision_layers: 2
+  decision_heads: 4
+  decision_feedforward: 256
+  head_hidden: 64
+  epsilon: 1.0e-8
+
+nfa:
+  beta: 0.5
+  momentum: 0.1
+  alpha_loss: 0.4
+  alpha_variance: 0.3
+  alpha_completeness: 0.3
+  omega_direction: 0.4
+  omega_shift: 0.3
+  omega_reliability: 0.3
+  temperature: 1.0
+  epsilon: 1.0e-8
+  scoring_hidden: 32
+  meta_lr: 0.001
+  reliability_floor: 1.0e-12
+
+decision:
+  omega_return: 0.5
+  theta_base: 0.40
+  kappa: 5.0
+  expand_threshold: 0.65
+  reduce_threshold: 0.35
+  cost_epsilon: 1.0e-4
+
+loss:
+  lambda_yield: 0.30
+  lambda_cost: 0.30
+  lambda_return: 0.30
+  lambda_economic: 0.10
+
+optimizer:
+  name: adam
+  lr: 0.0001
+  weight_decay: 0.00001
+
+train:
+  communication_rounds: 2
+  local_epochs: 1
+  batch_size: 2
+  convergence_window: 5
+  convergence_tolerance: 0.001
+
+augmentation:
+  horizontal_flip: true
+  rotation_degrees: 15.0
+  brightness: 0.10
+  sensor_noise_std: 0.05
+
+preprocess:
+  outlier_lambda: 3.5
+  gap_hours: 3.0
+  interval_minutes: 30
+  rolling_median: 11
+  diurnal_days: 3
+
+imagenet:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]

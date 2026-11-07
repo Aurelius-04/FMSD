@@ -1,0 +1,5 @@
+base: default.yaml
+train:
+  communication_rounds: 100
+  local_epochs: 5
+  batch_size: 32
